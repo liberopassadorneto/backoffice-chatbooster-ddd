@@ -1,7 +1,7 @@
+import { faker } from '@faker-js/faker';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 
 describe('FindByDomainController (e2e)', () => {
@@ -21,7 +21,7 @@ describe('FindByDomainController (e2e)', () => {
   describe('FindByDomain', () => {
     const fakeDomain = faker.internet.email();
 
-    it.only('/:domain (GET)', async () => {
+    it('/:domain (GET)', async () => {
       const response = await request(app.getHttpServer()).get(
         `/billing/${fakeDomain}`,
       );

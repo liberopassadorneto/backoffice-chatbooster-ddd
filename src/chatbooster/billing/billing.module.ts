@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BillingEntity } from './domain/billing.entity';
-import { findBillingProvider } from './providers/find-billing.provider';
+import { billingProvider } from './providers/billing.provider';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BillingEntity])],
-  controllers: [...findBillingProvider.controllers],
-  providers: [...findBillingProvider.providers],
-  exports: [...findBillingProvider.exports],
+  imports: [...billingProvider.imports],
+  controllers: [...billingProvider.controllers],
+  providers: [...billingProvider.providers],
 })
 export class BillingModule {}

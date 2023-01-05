@@ -1,10 +1,7 @@
 import { faker } from '@faker-js/faker';
-import {
-  BillingModel,
-  BillingModelProps,
-} from '@chatbooster/domain/model/billing/billing.model';
+import { BillingModel } from '@chatbooster/billing/model/billing.model';
 
-type OverrideProps = Partial<BillingModelProps>;
+type OverrideProps = Partial<BillingModel>;
 
 export function makeBilling(override: OverrideProps = {}): BillingModel {
   return new BillingModel({
