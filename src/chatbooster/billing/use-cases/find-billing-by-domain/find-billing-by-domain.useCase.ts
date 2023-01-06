@@ -1,15 +1,15 @@
-import { BillingRepositoryAbstract } from '@chatbooster/billing/abstracts/repositories/billing.repository.abstract';
-import { FindBillingByDomainUseCaseAbstract } from '@chatbooster/billing/abstracts/use-cases/find-billing-by-domain.useCase.abstract';
+import { AbstractBillingRepository } from '@chatbooster/billing/abstracts/repositories/billing.repository.abstract';
+import { AbstractFindBillingByDomainUseCase } from '@chatbooster/billing/abstracts/use-cases/find-billing-by-domain.useCase.abstract';
 import { BillingModel } from '@chatbooster/billing/model/billing.model';
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class FindBillingByDomainUseCase
-  implements FindBillingByDomainUseCaseAbstract
+  implements AbstractFindBillingByDomainUseCase
 {
   constructor(
-    @Inject(BillingRepositoryAbstract)
-    private readonly billingRepository: BillingRepositoryAbstract,
+    @Inject(AbstractBillingRepository)
+    private readonly billingRepository: AbstractBillingRepository,
   ) {}
 
   async findByDomain(domain: string): Promise<BillingModel> {

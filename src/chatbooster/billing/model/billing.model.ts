@@ -1,10 +1,26 @@
 import { randomInt } from 'node:crypto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDate, IsEmail, IsInt } from 'class-validator';
 
 export class BillingModel {
+  @IsInt()
+  @ApiProperty({ example: 1 })
   id: number;
+
+  @IsEmail()
+  @ApiProperty({ example: 'bmit.bitrix24.com.br' })
   domain: string;
+
+  @IsInt()
+  @ApiProperty({ example: 14 })
   amountOfDays: number;
+
+  @IsDate()
+  @ApiProperty({ example: '2023-01-03T21:09:55.000Z' })
   createdAt: Date;
+
+  @IsDate()
+  @ApiProperty({ example: '2023-01-03T21:09:55.000Z' })
   updatedAt: Date;
 
   constructor(partial: Partial<BillingModel>) {

@@ -2,14 +2,14 @@ import { TestingModule, Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { makeBilling } from '@test/factories/billing.factory';
 import { Repository } from 'typeorm';
-import { BillingRepositoryAbstract } from '../abstracts/repositories/billing.repository.abstract';
+import { AbstractBillingRepository } from '../abstracts/repositories/billing.repository.abstract';
 import { BillingEntity } from '../entities/billing.entity';
 import { TypeOrmBillingRepository } from './billing.repository';
 
 const mockBilling = makeBilling();
 
 describe('TypeOrmBillingRepository', () => {
-  let repository: BillingRepositoryAbstract;
+  let repository: AbstractBillingRepository;
   let mockRepository: Repository<BillingEntity>;
 
   beforeAll(async () => {
@@ -23,7 +23,7 @@ describe('TypeOrmBillingRepository', () => {
       ],
     }).compile();
 
-    repository = app.get<BillingRepositoryAbstract>(TypeOrmBillingRepository);
+    repository = app.get<AbstractBillingRepository>(TypeOrmBillingRepository);
     mockRepository = app.get<Repository<BillingEntity>>(
       getRepositoryToken(BillingEntity),
     );

@@ -24,9 +24,6 @@
       "@chatbooster/*": [
         "./src/chatbooster/*"
       ],
-      "@helpers/*": [
-        "./src/helpers/*"
-      ],
       "@test/*": [
         "./test/*"
       ]

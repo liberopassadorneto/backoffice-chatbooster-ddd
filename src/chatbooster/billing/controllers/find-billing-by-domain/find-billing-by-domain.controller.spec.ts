@@ -1,6 +1,6 @@
-import { FindBillingByDomainUseCaseAbstract } from '@chatbooster/billing/abstracts/use-cases/find-billing-by-domain.useCase.abstract';
+import { AbstractFindBillingByDomainUseCase } from '@chatbooster/billing/abstracts/use-cases/find-billing-by-domain.useCase.abstract';
 import { FindBillingByDomainUseCase } from '@chatbooster/billing/use-cases/find-billing-by-domain/find-billing-by-domain.useCase';
-import { TestingModule, Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { makeBilling } from '@test/factories/billing.factory';
 import { FindBillingByDomainController } from './find-billing-by-domain.controller';
 
@@ -10,9 +10,9 @@ class MockFindBillingByDomainUseCase {
   findByDomain = jest.fn().mockResolvedValue(mockBilling);
 }
 
-describe('FindBillingController', () => {
+describe('FindBillingByDomainController', () => {
   let controller: FindBillingByDomainController;
-  let mockUseCase: FindBillingByDomainUseCaseAbstract;
+  let mockUseCase: AbstractFindBillingByDomainUseCase;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,7 +28,7 @@ describe('FindBillingController', () => {
     controller = module.get<FindBillingByDomainController>(
       FindBillingByDomainController,
     );
-    mockUseCase = module.get<FindBillingByDomainUseCaseAbstract>(
+    mockUseCase = module.get<AbstractFindBillingByDomainUseCase>(
       FindBillingByDomainUseCase,
     );
   });
@@ -37,8 +37,8 @@ describe('FindBillingController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('findByDomain', () => {
-    it('should find billing by domain', async () => {
+  describe('findByDomain()', () => {
+    it('should find one billing by domain', async () => {
       jest.spyOn(mockUseCase, 'findByDomain');
 
       const result = await controller.findByDomain(mockBilling.domain);
