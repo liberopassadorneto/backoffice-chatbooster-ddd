@@ -1,10 +1,12 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AbstractBillingRepository } from '../abstracts/repositories/billing.repository.abstract';
 import { BillingEntity } from '../entities/billing.entity';
 import { TypeOrmBillingMapper } from '../mappers/billing.mapper';
-import { BillingModel } from '../model/billing.model';
+import { Injectable } from '@nestjs/common';
+import { AbstractBillingRepository } from '@chatbooster/billing/abstracts/repositories/billing.repository.abstract';
+import { BillingModel } from '@chatbooster/billing/model/billing.model';
 
+@Injectable()
 export class TypeOrmBillingRepository implements AbstractBillingRepository {
   constructor(
     @InjectRepository(BillingEntity)

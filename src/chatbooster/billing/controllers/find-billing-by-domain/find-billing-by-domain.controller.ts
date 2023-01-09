@@ -1,5 +1,5 @@
 import { BillingModel } from '@chatbooster/billing/model/billing.model';
-import { FindBillingByDomainUseCase } from '@chatbooster/billing/use-cases/find-billing-by-domain/find-billing-by-domain.useCase';
+import { FindBillingByDomainService } from '@chatbooster/billing/services/find-billing-by-domain/find-billing-by-domain.service';
 import {
   ClassSerializerInterceptor,
   Controller,
@@ -21,8 +21,8 @@ import {
 @ApiTags('Billing')
 export class FindBillingByDomainController {
   constructor(
-    @Inject(FindBillingByDomainUseCase)
-    private readonly findBillingByDomainUseCase: FindBillingByDomainUseCase,
+    @Inject(FindBillingByDomainService)
+    private readonly findBillingByDomainService: FindBillingByDomainService,
   ) {}
 
   @Get(':domain')
@@ -42,6 +42,6 @@ export class FindBillingByDomainController {
   async findByDomain(
     @Param('domain') domain: string,
   ): Promise<BillingModel | null> {
-    return await this.findBillingByDomainUseCase.findByDomain(domain);
+    return await this.findBillingByDomainService.findByDomain(domain);
   }
 }

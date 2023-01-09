@@ -1,10 +1,10 @@
 import { AbstractBillingRepository } from '@chatbooster/billing/abstracts/repositories/billing.repository.abstract';
-import { AbstractUpdateBillingDomainUseCase } from '@chatbooster/billing/abstracts/use-cases/update-billing-domain.useCase.abstract';
 import { faker } from '@faker-js/faker';
 import { NotFoundException } from '@nestjs/common';
-import { TestingModule, Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { makeBilling } from '@test/factories/billing.factory';
-import { UpdateBillingDomainUseCase } from './update-billing-domain.useCase';
+import { UpdateBillingDomainService } from './update-billing-domain.service';
+import { AbstractUpdateBillingDomainService } from '@chatbooster/billing/abstracts/services/update-billing-domain.service.abstract';
 
 const mockBilling = makeBilling();
 
@@ -13,14 +13,14 @@ class MockBillingRepository {
   save = jest.fn().mockResolvedValue(mockBilling);
 }
 
-describe('UpdateBillingDomainUseCase', () => {
-  let useCase: AbstractUpdateBillingDomainUseCase;
+describe('UpdateBillingDomainService', () => {
+  let service: AbstractUpdateBillingDomainService;
   let mockRepository: AbstractBillingRepository;
 
   beforeAll(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        UpdateBillingDomainUseCase,
+        UpdateBillingDomainService,
         {
           provide: AbstractBillingRepository,
           useClass: MockBillingRepository,
@@ -28,8 +28,8 @@ describe('UpdateBillingDomainUseCase', () => {
       ],
     }).compile();
 
-    useCase = app.get<AbstractUpdateBillingDomainUseCase>(
-      UpdateBillingDomainUseCase,
+    service = app.get<AbstractUpdateBillingDomainService>(
+      UpdateBillingDomainService,
     );
     mockRepository = app.get<AbstractBillingRepository>(
       AbstractBillingRepository,
@@ -37,7 +37,7 @@ describe('UpdateBillingDomainUseCase', () => {
   });
 
   it('should be defined', () => {
-    expect(useCase).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('updateDomain()', () => {
@@ -45,7 +45,7 @@ describe('UpdateBillingDomainUseCase', () => {
       const currentDomain = mockBilling.domain;
       const newDomain = faker.internet.domainName();
 
-      await useCase.updateDomain({
+      await service.updateDomain({
         currentDomain,
         newDomain,
       });
@@ -64,7 +64,7 @@ describe('UpdateBillingDomainUseCase', () => {
       mockRepository.findByDomain = jest.fn().mockResolvedValue(null);
 
       await expect(
-        useCase.updateDomain({
+        service.updateDomain({
           currentDomain,
           newDomain,
         }),

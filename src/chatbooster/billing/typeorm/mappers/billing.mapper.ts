@@ -1,5 +1,5 @@
+import { BillingModel } from '@chatbooster/billing/model/billing.model';
 import { BillingEntity } from '../entities/billing.entity';
-import { BillingModel } from '../model/billing.model';
 
 export class TypeOrmBillingMapper {
   static toModel(billing: BillingEntity): BillingModel {

@@ -1,43 +1,88 @@
 import { faker } from '@faker-js/faker';
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
+import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
+import { BillingModule } from '@chatbooster/billing/billing.module';
+import { Repository } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { BillingEntity } from '@chatbooster/billing/typeorm/entities/billing.entity';
 
 describe('Billing (e2e)', () => {
   let app: INestApplication;
+  let localRepository: Repository<BillingEntity>;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+  beforeAll(async () => {
+    const module = await Test.createTestingModule({
+      imports: [
+        BillingModule,
+        TypeOrmModule.forRoot({
+          type: 'mysql',
+          host: 'localhost',
+          port: 24001,
+          username: 'root',
+          password: 'root',
+          database: 'chatbooster',
+          entities: [BillingEntity],
+          synchronize: true,
+        }),
+      ],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = module.createNestApplication();
     await app.init();
+
+    localRepository = module.get('BillingEntityRepository');
   });
 
-  afterEach(() => app.close());
-
-  it('Find one billing by domain [GET /billing/:domain]', async () => {
-    const fakeDomain = faker.internet.email();
-
-    const response = await request(app.getHttpServer()).get(
-      `/billing/${fakeDomain}`,
-    );
-
-    expect(response.status).toBe(404);
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('Update billing domain [PATCH /billing/:domain/update]', async () => {
-    const fakeCurrentDomain = faker.internet.email();
-    const fakeNewDomain = faker.internet.email();
+  afterEach(async () => {
+    await localRepository.query(`DELETE FROM billing;`);
+  });
 
-    const response = await request(app.getHttpServer())
-      .patch(`/billing/${fakeCurrentDomain}/update`)
-      .send({
-        newDomain: fakeNewDomain,
+  describe('GET /billing/:domain', () => {
+    it('should find one billing by domain', async () => {
+      const domain = faker.internet.domainName();
+
+      await localRepository.save({
+        domain,
+        amountOfDays: 14,
       });
 
-    expect(response.status).toBe(404);
+      const { status, body } = await request(app.getHttpServer()).get(
+        `/billing/${domain}`,
+      );
+
+      expect(status).toBe(200);
+      expect(body.domain).toEqual(domain);
+      expect(body.amountOfDays).toEqual(14);
+    });
+  });
+
+  describe('PATCH /billing/:domain/update', () => {
+    it('should update a billing domain', async () => {
+      const currentDomain = faker.internet.domainName();
+
+      await localRepository.save({
+        domain: currentDomain,
+        amountOfDays: 14,
+      });
+
+      const newDomain = faker.internet.domainName();
+
+      const { status } = await request(app.getHttpServer())
+        .patch(`/billing/${currentDomain}/update`)
+        .send({
+          newDomain,
+        });
+
+      expect(status).toBe(200);
+
+      const result = await localRepository.findOneBy({ domain: newDomain });
+
+      expect(result?.domain).toEqual(newDomain);
+    });
   });
 });

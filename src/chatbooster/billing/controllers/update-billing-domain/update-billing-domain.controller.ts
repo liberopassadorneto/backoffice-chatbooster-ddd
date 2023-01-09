@@ -16,16 +16,16 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateBillingDomainUseCase } from '@chatbooster/billing/use-cases/update-billing-domain/update-billing-domain.useCase';
-import { UpdateBillingDomainDto } from '@chatbooster/billing/dtos/update-billing.dto';
+import { UpdateBillingDomainService } from '@chatbooster/billing/services/update-billing-domain/update-billing-domain.service';
+import { UpdateBillingDomainDto } from '../dtos/update-billing-domain.dto';
 
 @Controller('billing')
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Billing')
 export class UpdateBillingDomainController {
   constructor(
-    @Inject(UpdateBillingDomainUseCase)
-    private readonly updateBillingDomainUseCase: UpdateBillingDomainUseCase,
+    @Inject(UpdateBillingDomainService)
+    private readonly updateBillingDomainService: UpdateBillingDomainService,
   ) {}
 
   @Patch(':currentDomain/update')
@@ -55,7 +55,7 @@ export class UpdateBillingDomainController {
     @Param('currentDomain') currentDomain: string,
     @Body() { newDomain }: UpdateBillingDomainDto,
   ): Promise<void> {
-    await this.updateBillingDomainUseCase.updateDomain({
+    await this.updateBillingDomainService.updateDomain({
       currentDomain,
       newDomain,
     });

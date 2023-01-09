@@ -1,8 +1,8 @@
+import { AbstractBillingRepository } from '@chatbooster/billing/abstracts/repositories/billing.repository.abstract';
 import { TestingModule, Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { makeBilling } from '@test/factories/billing.factory';
 import { Repository } from 'typeorm';
-import { AbstractBillingRepository } from '../abstracts/repositories/billing.repository.abstract';
 import { BillingEntity } from '../entities/billing.entity';
 import { TypeOrmBillingRepository } from './billing.repository';
 
@@ -29,8 +29,8 @@ describe('TypeOrmBillingRepository', () => {
     );
   });
 
-  describe('findByDomain', () => {
-    it('should find billing by domain', async () => {
+  describe('findByDomain()', () => {
+    it('should find one billing by domain', async () => {
       jest.spyOn(mockRepository, 'findOneBy').mockResolvedValue(mockBilling);
 
       const billing = await repository.findByDomain(mockBilling.domain);
@@ -40,10 +40,21 @@ describe('TypeOrmBillingRepository', () => {
         domain: mockBilling.domain,
       });
     });
+
+    it('should return null if billing not found', async () => {
+      jest.spyOn(mockRepository, 'findOneBy').mockResolvedValue(null);
+
+      const billing = await repository.findByDomain(mockBilling.domain);
+
+      expect(billing).toBeNull();
+      expect(mockRepository.findOneBy).toHaveBeenCalledWith({
+        domain: mockBilling.domain,
+      });
+    });
   });
 
-  describe('save', () => {
-    it('should save billing', async () => {
+  describe('save()', () => {
+    it('should save a billing', async () => {
       jest.spyOn(mockRepository, 'save').mockResolvedValue(mockBilling);
 
       await repository.save(mockBilling);

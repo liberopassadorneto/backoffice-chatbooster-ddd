@@ -3,7 +3,7 @@ export interface UpdateBillingDomainRequest {
   newDomain: string;
 }
 
-export abstract class AbstractUpdateBillingDomainUseCase {
+export abstract class AbstractUpdateBillingDomainService {
   abstract updateDomain({
     currentDomain,
     newDomain,

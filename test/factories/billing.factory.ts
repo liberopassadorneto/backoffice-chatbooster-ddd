@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { BillingModel } from '@chatbooster/billing/model/billing.model';
-import { UpdateBillingDomainDto } from '@chatbooster/billing/dtos/update-billing.dto';
+import { UpdateBillingDomainDto } from '@chatbooster/billing/controllers/dtos/update-billing-domain.dto';
 
 type OverrideProps = Partial<BillingModel>;
 

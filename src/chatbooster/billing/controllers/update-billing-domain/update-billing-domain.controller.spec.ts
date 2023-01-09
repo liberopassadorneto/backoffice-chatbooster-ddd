@@ -3,28 +3,28 @@ import {
   makeUpdateBillingDomainDto,
 } from '@test/factories/billing.factory';
 import { UpdateBillingDomainController } from '@chatbooster/billing/controllers/update-billing-domain/update-billing-domain.controller';
-import { AbstractUpdateBillingDomainUseCase } from '@chatbooster/billing/abstracts/use-cases/update-billing-domain.useCase.abstract';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UpdateBillingDomainUseCase } from '@chatbooster/billing/use-cases/update-billing-domain/update-billing-domain.useCase';
+import { UpdateBillingDomainService } from '@chatbooster/billing/services/update-billing-domain/update-billing-domain.service';
+import { AbstractUpdateBillingDomainService } from '@chatbooster/billing/abstracts/services/update-billing-domain.service.abstract';
 
 const mockBilling = makeBilling();
 const mockUpdateBillingDomainDto = makeUpdateBillingDomainDto();
 
-class MockUpdateBillingDomainUseCase {
+class MockUpdateBillingDomainService {
   updateDomain = jest.fn().mockResolvedValue(mockBilling);
 }
 
 describe('UpdateBillingDomainController', () => {
   let controller: UpdateBillingDomainController;
-  let mockUseCase: AbstractUpdateBillingDomainUseCase;
+  let mockService: AbstractUpdateBillingDomainService;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UpdateBillingDomainController],
       providers: [
         {
-          provide: UpdateBillingDomainUseCase,
-          useClass: MockUpdateBillingDomainUseCase,
+          provide: UpdateBillingDomainService,
+          useClass: MockUpdateBillingDomainService,
         },
       ],
     }).compile();
@@ -33,8 +33,8 @@ describe('UpdateBillingDomainController', () => {
       UpdateBillingDomainController,
     );
 
-    mockUseCase = module.get<AbstractUpdateBillingDomainUseCase>(
-      UpdateBillingDomainUseCase,
+    mockService = module.get<AbstractUpdateBillingDomainService>(
+      UpdateBillingDomainService,
     );
   });
 
@@ -44,13 +44,13 @@ describe('UpdateBillingDomainController', () => {
 
   describe('updateDomain()', () => {
     it('should update one billing domain', async () => {
-      jest.spyOn(mockUseCase, 'updateDomain');
+      jest.spyOn(mockService, 'updateDomain');
 
       const currentDomain = mockBilling.domain;
 
       await controller.updateDomain(currentDomain, mockUpdateBillingDomainDto);
 
-      expect(mockUseCase.updateDomain).toBeCalledWith({
+      expect(mockService.updateDomain).toBeCalledWith({
         currentDomain,
         newDomain: mockUpdateBillingDomainDto.newDomain,
       });
